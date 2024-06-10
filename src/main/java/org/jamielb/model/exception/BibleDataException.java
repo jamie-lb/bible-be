@@ -1,4 +1,4 @@
-package org.jamielb.exception;
+package org.jamielb.model.exception;
 
 public class BibleDataException extends RuntimeException {
 

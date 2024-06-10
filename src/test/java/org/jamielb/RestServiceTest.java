@@ -15,4 +15,9 @@ class RestServiceTest {
         given().when().get("/healthcheck").then().statusCode(200).body(is("Service is up and running"));
     }
 
+    @Test
+    void testGetAllVersesEndpoint() {
+        given().when().get("/allVerses/ESV").then().statusCode(200);
+    }
+
 }
