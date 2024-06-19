@@ -95,4 +95,43 @@ public class BibleDao {
         }
     }
 
+    public List<Integer> getBookChapters(String versionCode, int bookId) {
+        String sql = BibleQueries.getBookChapters();
+        try (Connection connection = datasource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            int index = 0;
+            statement.setString(++index, versionCode);
+            statement.setInt(++index, bookId);
+            try (ResultSet results = statement.executeQuery()) {
+                List<Integer> chapters = new ArrayList<>();
+                while (results.next()) {
+                    chapters.add(results.getInt("chapter_number"));
+                }
+                return chapters;
+            }
+        } catch (SQLException e) {
+            throw new BibleDataException(e);
+        }
+    }
+
+    public List<Integer> getChapterVerses(String versionCode, int bookId, int chapterNumber) {
+        String sql = BibleQueries.getChapterVerses();
+        try (Connection connection = datasource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            int index = 0;
+            statement.setString(++index, versionCode);
+            statement.setInt(++index, bookId);
+            statement.setInt(++index, chapterNumber);
+            try (ResultSet results = statement.executeQuery()) {
+                List<Integer> verseNumbers = new ArrayList<>();
+                while (results.next()) {
+                    verseNumbers.add(results.getInt("verse_number"));
+                }
+                return verseNumbers;
+            }
+        } catch (SQLException e) {
+            throw new BibleDataException(e);
+        }
+    }
+
 }

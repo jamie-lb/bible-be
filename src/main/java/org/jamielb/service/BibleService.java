@@ -32,4 +32,12 @@ public class BibleService {
         return dao.getVerse(versionCode, bookId, chapterNumber, verseNumber);
     }
 
+    public List<Integer> getBookChapters(String versionCode, int bookId) {
+        return dao.getBookChapters(versionCode, bookId);
+    }
+
+    public List<Integer> getChapterVerses(String versionCode, int bookId, int chapterNumber) {
+        return dao.getChapterVerses(versionCode, bookId, chapterNumber);
+    }
+
 }

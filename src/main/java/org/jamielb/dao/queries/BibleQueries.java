@@ -33,4 +33,12 @@ public class BibleQueries {
         return getVersionVerses() + " AND vs.book_id = ? AND vs.chapter_number = ? AND vs.verse_number = ?";
     }
 
+    public static String getBookChapters() {
+        return "SELECT DISTINCT chapter_number FROM verses WHERE version_code = ? AND book_id = ? ORDER BY chapter_number";
+    }
+
+    public static String getChapterVerses() {
+        return "SELECT verse_number FROM verses WHERE version_code = ? AND book_id = ? AND chapter_number = ? ORDER BY verse_number";
+    }
+
 }

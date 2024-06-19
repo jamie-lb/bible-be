@@ -92,4 +92,33 @@ public class RestService {
         }
     }
 
+    @GET
+    @Path("{versionCode}/chapters/{bookId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChapterListForBook(
+            @PathParam("versionCode") String versionCode, @PathParam("bookId") int bookId) {
+        try {
+            List<Integer> chapterNumbers = bibleService.getBookChapters(versionCode, bookId);
+            return RestUtils.addCommonHeaders(Response.ok(chapterNumbers, MediaType.APPLICATION_JSON)).build();
+        } catch (Exception e) {
+            LOGGER.error(e, e.fillInStackTrace());
+            return RestUtils.errorResponse(e);
+        }
+    }
+
+    @GET
+    @Path("{versionCode}/verses/{bookId}/{chapterNumber}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVerseNumbersInBookChapter(
+            @PathParam("versionCode") String versionCode,
+            @PathParam("bookId") int bookId, @PathParam("chapterNumber") int chapterNumber) {
+        try {
+            List<Integer> verseNumbers = bibleService.getChapterVerses(versionCode, bookId, chapterNumber);
+            return RestUtils.addCommonHeaders(Response.ok(verseNumbers, MediaType.APPLICATION_JSON)).build();
+        } catch (Exception e) {
+            LOGGER.error(e, e.fillInStackTrace());
+            return RestUtils.errorResponse(e);
+        }
+    }
+
 }
