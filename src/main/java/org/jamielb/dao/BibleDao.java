@@ -134,4 +134,33 @@ public class BibleDao {
         }
     }
 
+    public Verse getNextVerse(String versionCode, int bookId, int chapterNumber, int verseNumber) {
+        return getAdjacentVerse(BibleQueries.getNextVerse(), versionCode, bookId, chapterNumber, verseNumber);
+    }
+
+    private Verse getAdjacentVerse(String sql, String versionCode, int bookId, int chapterNumber, int verseNumber) {
+        try (Connection connection = datasource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            int index = 0;
+            statement.setString(++index, versionCode);
+            statement.setInt(++index, bookId);
+            statement.setInt(++index, chapterNumber);
+            statement.setInt(++index, verseNumber);
+            statement.setString(++index, versionCode);
+            statement.setInt(++index, bookId);
+            statement.setInt(++index, chapterNumber);
+            statement.setString(++index, versionCode);
+            statement.setInt(++index, bookId);
+            try (ResultSet results = statement.executeQuery()) {
+                return results.next() ? VerseMapper.mapRow(results) : null;
+            }
+        } catch (SQLException e) {
+            throw new BibleDataException(e);
+        }
+    }
+
+    public Verse getPreviousVerse(String versionCode, int bookId, int chapterNumber, int verseNumber) {
+        return getAdjacentVerse(BibleQueries.getPreviousVerse(), versionCode, bookId, chapterNumber, verseNumber);
+    }
+
 }

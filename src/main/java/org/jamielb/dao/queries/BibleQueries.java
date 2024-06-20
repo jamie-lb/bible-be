@@ -41,4 +41,68 @@ public class BibleQueries {
         return "SELECT verse_number FROM verses WHERE version_code = ? AND book_id = ? AND chapter_number = ? ORDER BY verse_number";
     }
 
+    public static String getNextVerse() {
+        return """
+                WITH first_result AS (
+                    SELECT id, version_code, book_id, chapter_number, verse_number
+                    FROM verses
+                    WHERE version_code = ?
+                    AND book_id = ?
+                    AND chapter_number = ?
+                    AND verse_number > ?
+                    UNION
+                    SELECT id, version_code, book_id, chapter_number, verse_number
+                    FROM verses
+                    WHERE version_code = ?
+                    AND book_id = ?
+                    AND chapter_number > ?
+                    UNION
+                    SELECT id, version_code, book_id, chapter_number, verse_number
+                    FROM verses
+                    WHERE version_code = ?
+                    AND book_id > ?
+                    ORDER BY book_id, chapter_number, verse_number
+                    LIMIT 1
+                )
+                SELECT %1$s, %2$s, %3$s, %4$s
+                FROM verses vs
+                INNER JOIN first_result fr ON vs.id = fr.id
+                INNER JOIN versions v ON vs.version_code = v.version_code
+                INNER JOIN books b ON vs.book_id = b.id
+                INNER JOIN testaments t ON b.testament_id = t.id;
+               """.formatted(VERSE_FIELDS, VERSION_FIELDS, BOOK_FIELDS, TESTAMENT_FIELDS);
+    }
+
+    public static String getPreviousVerse() {
+        return """
+                WITH last_result AS (
+                    SELECT id, version_code, book_id, chapter_number, verse_number
+                    FROM verses
+                    WHERE version_code = ?
+                    AND book_id = ?
+                    AND chapter_number = ?
+                    AND verse_number < ?
+                    UNION
+                    SELECT id, version_code, book_id, chapter_number, verse_number
+                    FROM verses
+                    WHERE version_code = ?
+                    AND book_id = ?
+                    AND chapter_number < ?
+                    UNION
+                    SELECT id, version_code, book_id, chapter_number, verse_number
+                    FROM verses
+                    WHERE version_code = ?
+                    AND book_id < ?
+                    ORDER BY book_id DESC, chapter_number DESC, verse_number DESC
+                    LIMIT 1
+                )
+                SELECT %1$s, %2$s, %3$s, %4$s
+                FROM verses vs
+                INNER JOIN last_result lr ON vs.id = lr.id
+                INNER JOIN versions v ON vs.version_code = v.version_code
+                INNER JOIN books b ON vs.book_id = b.id
+                INNER JOIN testaments t ON b.testament_id = t.id;
+               """.formatted(VERSE_FIELDS, VERSION_FIELDS, BOOK_FIELDS, TESTAMENT_FIELDS);
+    }
+
 }

@@ -40,4 +40,12 @@ public class BibleService {
         return dao.getChapterVerses(versionCode, bookId, chapterNumber);
     }
 
+    public Verse getNextVerse(String versionCode, int bookId, int chapterNumber, int verseNumber) {
+        return dao.getNextVerse(versionCode, bookId, chapterNumber, verseNumber);
+    }
+
+    public Verse getPreviousVerse(String versionCode, int bookId, int chapterNumber, int verseNumber) {
+        return dao.getPreviousVerse(versionCode, bookId, chapterNumber, verseNumber);
+    }
+
 }

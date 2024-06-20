@@ -121,4 +121,36 @@ public class RestService {
         }
     }
 
+    @GET
+    @Path("nextVerse/{versionCode}/{bookId}/{chapterNumber}/{verseNumber}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNextVerse(
+            @PathParam("versionCode") String versionCode,
+            @PathParam("bookId") int bookId,
+            @PathParam("chapterNumber") int chapterNumber, @PathParam("verseNumber") int verseNumber) {
+        try {
+            Verse verse = bibleService.getNextVerse(versionCode, bookId, chapterNumber, verseNumber);
+            return RestUtils.addCommonHeaders(Response.ok(verse, MediaType.APPLICATION_JSON)).build();
+        } catch (Exception e) {
+            LOGGER.error(e, e.fillInStackTrace());
+            return RestUtils.errorResponse(e);
+        }
+    }
+
+    @GET
+    @Path("previousVerse/{versionCode}/{bookId}/{chapterNumber}/{verseNumber}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPreviousVerse(
+            @PathParam("versionCode") String versionCode,
+            @PathParam("bookId") int bookId,
+            @PathParam("chapterNumber") int chapterNumber, @PathParam("verseNumber") int verseNumber) {
+        try {
+            Verse verse = bibleService.getPreviousVerse(versionCode, bookId, chapterNumber, verseNumber);
+            return RestUtils.addCommonHeaders(Response.ok(verse, MediaType.APPLICATION_JSON)).build();
+        } catch (Exception e) {
+            LOGGER.error(e, e.fillInStackTrace());
+            return RestUtils.errorResponse(e);
+        }
+    }
+
 }
