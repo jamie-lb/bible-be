@@ -2,6 +2,9 @@ package org.jamielb.model.businessobjects;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScheduledPlan {
 
     private int id;
